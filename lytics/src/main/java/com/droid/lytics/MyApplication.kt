@@ -4,10 +4,12 @@ import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
+import androidx.room.Room
+import com.droid.lytics.config.Config
+import com.droid.lytics.db.AppDatabase
 import com.droid.lytics.tracker.Logger
-import dagger.hilt.android.HiltAndroidApp
-import dagger.hilt.android.qualifiers.ApplicationContext
 
 /**
  * Created by Sujan Rai
@@ -15,23 +17,26 @@ import dagger.hilt.android.qualifiers.ApplicationContext
  */
 
 class MyApplication : Application() {
+    companion object {
+        lateinit var database: AppDatabase
 
-    private var context: Context? = null
+        lateinit var context: Context
+    }
 
     override fun onCreate() {
         super.onCreate()
 
-        context = this.applicationContext
+        context = applicationContext
+
+        handleDb()
+
+        handleUser()
 
         Logger().logAppOpen()
 
         registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
             override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
-                Log.d("TAG", "onCreate(): ${activity::class.java.simpleName}")
-
                 Logger().logScreenView(activity::class.java.simpleName)
-
-                Logger().getAllEvents()
             }
 
             override fun onActivityStarted(activity: Activity) {
@@ -55,7 +60,20 @@ class MyApplication : Application() {
         })
     }
 
-    fun getContext(): Context {
-        return context!!
+    private fun handleUser() {
+        if (Config.getUserId().isEmpty()){
+            Config.setUserId(
+                Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
+            )
+        }
+    }
+
+    private fun handleDb() {
+        database = Room.databaseBuilder(
+            applicationContext,
+            AppDatabase::class.java,
+            "sdk-db.db"
+        ).fallbackToDestructiveMigration()
+            .build()
     }
 }

@@ -2,7 +2,6 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
     id("kotlin-kapt")
-    id("com.google.dagger.hilt.android") version "2.48.1"
 }
 
 android {
@@ -48,9 +47,8 @@ dependencies {
     implementation(libs.okhttpprofiler)
     implementation(libs.androidx.room.ktx)
     implementation (libs.androidx.room.runtime)
-    implementation (libs.hilt.android)
-    kapt (libs.hilt.compiler)
 
+    implementation(libs.work.runtime.ktx)
 
     kapt ("androidx.room:room-compiler:2.6.1")
 }

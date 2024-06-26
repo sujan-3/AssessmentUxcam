@@ -5,7 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.droid.lytics.db.entity.Event
+import com.droid.lytics.db.entity.EventEntity
 
 /**
  * Created by Sujan Rai
@@ -15,16 +15,19 @@ import com.droid.lytics.db.entity.Event
 @Dao
 interface EventDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(event: Event): Long
+    suspend fun insert(eventEntity: EventEntity): Long
 
     @Query("SELECT * FROM events WHERE id = :eventId")
-    suspend fun getEventById(eventId: Long): Event
+    suspend fun getEventById(eventId: Long): EventEntity
 
     @Query("SELECT * FROM events")
-    suspend fun getAllEvents(): List<Event>
+    suspend fun getAllEvents(): List<EventEntity>
 
     @Delete
-    suspend fun deleteEvent(event: Event)
+    suspend fun deleteEvent(eventEntity: EventEntity)
+
+    @Query("DELETE FROM events WHERE id in (:eventIds)")
+    suspend fun deleteEventsById(eventIds: List<Long>)
 
     @Query("DELETE FROM events")
     suspend fun nuke()

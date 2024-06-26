@@ -9,9 +9,9 @@ import androidx.room.PrimaryKey
  */
 
 @Entity(tableName = "events")
-data class Event(
+data class EventEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val name: String,
     val timestamp: Long,
-
+    val sessionId: String,
 )
