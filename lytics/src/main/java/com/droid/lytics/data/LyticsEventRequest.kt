@@ -8,7 +8,10 @@ import com.droid.lytics.UserId
  */
 
 
-data class LogRequest(
+/**
+ * Dto for logging events to app-server
+ */
+data class LyticsEventRequest(
     val id: UserId,
     val event: List<Event>
 ) {

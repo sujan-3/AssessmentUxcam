@@ -1,8 +1,8 @@
-package com.droid.lytics.db.entity
+package com.droid.lytics.storage.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.droid.lytics.data.EventData
+import com.droid.lytics.data.LyticsEventRequest
 
 /**
  * Created by Sujan Rai
@@ -17,8 +17,8 @@ data class PropEntity(
     val timestamp: Long,
     val eventId: Long
 ) {
-    fun getPropData(): EventData.Prop {
-        return EventData.Prop(
+    fun getPropData(): LyticsEventRequest.Event.Prop {
+        return LyticsEventRequest.Event.Prop(
             name = name,
             value = value,
             timestamp = timestamp

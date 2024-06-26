@@ -4,7 +4,7 @@ package com.droid.lytics.data
  * Created by Sujan Rai
  * on 6/24/2024
  */
-class CustomEvent private constructor(
+class LyticsEvent private constructor(
     var eventName: String,
     var props: HashMap<String, Any?>? = HashMap()
 ) {
@@ -13,6 +13,6 @@ class CustomEvent private constructor(
         private var props: HashMap<String, Any?>? = HashMap()
     ) {
         fun addProp(key: String, value: Any?) = apply { this.props?.put(key = key, value = value) }
-        fun build() = CustomEvent(eventName = eventName, props = this.props)
+        fun build() = LyticsEvent(eventName = eventName, props = this.props)
     }
 }

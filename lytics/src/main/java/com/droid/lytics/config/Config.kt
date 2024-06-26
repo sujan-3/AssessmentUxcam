@@ -2,7 +2,7 @@ package com.droid.lytics.config
 
 import com.droid.lytics.MyApplication
 import com.droid.lytics.UserId
-import com.droid.lytics.db.AppPreferenceManager
+import com.droid.lytics.storage.AppPreferenceManager
 import com.droid.lytics.util.Constants
 
 /**

@@ -1,9 +1,9 @@
 package com.droid.lytics.tracker
 
 import com.droid.lytics.MyApplication
-import com.droid.lytics.data.CustomEvent
-import com.droid.lytics.db.entity.EventEntity
-import com.droid.lytics.db.entity.PropEntity
+import com.droid.lytics.data.LyticsEvent
+import com.droid.lytics.storage.entity.EventEntity
+import com.droid.lytics.storage.entity.PropEntity
 
 /**
  * Created by Sujan Rai
@@ -14,7 +14,7 @@ internal class CustomEventTrackerImpl : CustomEventTracker {
     private val eventDao = MyApplication.database.eventDao()
     private val propDao = MyApplication.database.propDao()
 
-    override suspend fun trackEvent(event: CustomEvent, sessionId: String, timestamp: Long) {
+    override suspend fun trackEvent(event: LyticsEvent, sessionId: String, timestamp: Long) {
         val eventEntityId = eventDao.insert(
             EventEntity(
                 name = event.eventName,

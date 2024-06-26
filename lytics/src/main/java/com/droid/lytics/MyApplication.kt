@@ -5,11 +5,10 @@ import android.app.Application
 import android.content.Context
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import androidx.room.Room
 import com.droid.lytics.config.Config
-import com.droid.lytics.db.AppDatabase
-import com.droid.lytics.tracker.Logger
+import com.droid.lytics.storage.AppDatabase
+import com.droid.lytics.tracker.Lytics
 
 /**
  * Created by Sujan Rai
@@ -32,11 +31,11 @@ class MyApplication : Application() {
 
         handleUser()
 
-        Logger().logAppOpen()
+        Lytics.logAppOpen()
 
         registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
             override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
-                Logger().logScreenView(activity::class.java.simpleName)
+                Lytics.logScreenView(activity::class.java.simpleName)
             }
 
             override fun onActivityStarted(activity: Activity) {
@@ -61,7 +60,7 @@ class MyApplication : Application() {
     }
 
     private fun handleUser() {
-        if (Config.getUserId().isEmpty()){
+        if (Config.getUserId().isEmpty()) {
             Config.setUserId(
                 Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
             )

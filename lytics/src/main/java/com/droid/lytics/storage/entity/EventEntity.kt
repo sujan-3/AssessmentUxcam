@@ -1,4 +1,4 @@
-package com.droid.lytics.db.entity
+package com.droid.lytics.storage.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

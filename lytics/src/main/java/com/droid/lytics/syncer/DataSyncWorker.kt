@@ -6,12 +6,11 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.droid.lytics.MyApplication
 import com.droid.lytics.config.Config
-import com.droid.lytics.data.LogRequest
+import com.droid.lytics.data.LyticsEventRequest
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlin.math.log
 
 /**
  * Created by Sujan Rai
@@ -26,8 +25,6 @@ class DataSyncWorker(
     private val propDao = MyApplication.database.propDao()
 
     override suspend fun doWork(): Result {
-        Log.d("TAG", "doWork: ")
-
         return syncData()
     }
 
@@ -50,7 +47,6 @@ class DataSyncWorker(
 
                     propDao.deletePropsByEventId(eventIds)
                 }
-
             }
 
             return Result.success()
@@ -62,7 +58,7 @@ class DataSyncWorker(
         }
     }
 
-    private suspend fun getData(): LogRequest {
+    private suspend fun getData(): LyticsEventRequest {
         val eventEntities = eventDao.getAllEvents()
 
         if (eventEntities.isEmpty()) {
@@ -71,12 +67,12 @@ class DataSyncWorker(
 
         val userId = Config.getUserId()
 
-        val events = mutableListOf<LogRequest.Event>()
+        val events = mutableListOf<LyticsEventRequest.Event>()
 
         eventEntities.forEach { it ->
             val props = propDao.getPropsByEventId(it.id)
 
-            val event = LogRequest.Event(
+            val event = LyticsEventRequest.Event(
                 id = it.id,
                 name = it.name,
                 timestamp = it.timestamp,
@@ -89,11 +85,11 @@ class DataSyncWorker(
             events.add(event)
         }
 
-        val logRequest = LogRequest(
+        val lyticsEventRequest = LyticsEventRequest(
             id = userId,
             event = events
         )
 
-        return logRequest
+        return lyticsEventRequest
     }
 }

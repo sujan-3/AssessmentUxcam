@@ -1,4 +1,4 @@
-package com.droid.lytics.db
+package com.droid.lytics.storage
 
 import android.content.Context
 import android.content.SharedPreferences

@@ -1,11 +1,11 @@
-package com.droid.lytics.db.dao
+package com.droid.lytics.storage.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.droid.lytics.db.entity.EventEntity
+import com.droid.lytics.storage.entity.EventEntity
 
 /**
  * Created by Sujan Rai

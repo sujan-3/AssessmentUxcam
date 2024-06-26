@@ -1,11 +1,11 @@
-package com.droid.lytics.db
+package com.droid.lytics.storage
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.droid.lytics.db.dao.EventDao
-import com.droid.lytics.db.dao.PropDao
-import com.droid.lytics.db.entity.EventEntity
-import com.droid.lytics.db.entity.PropEntity
+import com.droid.lytics.storage.dao.EventDao
+import com.droid.lytics.storage.dao.PropDao
+import com.droid.lytics.storage.entity.EventEntity
+import com.droid.lytics.storage.entity.PropEntity
 
 /**
  * Created by Sujan Rai

@@ -1,34 +1,25 @@
 package com.droid.lytics.tracker
 
-import android.util.Log
-import androidx.work.Constraints
-import androidx.work.NetworkType
-import androidx.work.PeriodicWorkRequest
-import com.droid.lytics.MyApplication
 import com.droid.lytics.config.Config
-import com.droid.lytics.data.CustomEvent
+import com.droid.lytics.data.LyticsEvent
 import com.droid.lytics.syncer.DataSyncHelper
-import com.droid.lytics.syncer.DataSyncWorker
 import com.droid.lytics.util.Constants
 import com.droid.lytics.util.SessionUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import java.util.concurrent.TimeUnit
 
 /**
  * Created by Sujan Rai
  * on 6/23/2024
  */
-class Logger {
-    private val defaultEventTracker: DefaultEventTracker = DefaultEventTrackerImpl()
-    private val customEventTracker: CustomEventTracker = CustomEventTrackerImpl()
-
-    private val eventDao = MyApplication.database.eventDao()
-    private val propDao = MyApplication.database.propDao()
-
+object Lytics {
     private var sdkInitialized = false
     private var sessionId: String? = null
+
+    private val defaultEventTracker: DefaultEventTracker = DefaultEventTrackerImpl()
+    private val customEventTracker: CustomEventTracker = CustomEventTrackerImpl()
 
     private var scope = CoroutineScope(Dispatchers.IO)
 
@@ -46,13 +37,18 @@ class Logger {
     }
 
     /**
+     * Opts user to disable collecting and recording events
+     */
+    fun deactivate() {
+        Config.setSdkInitialized(false)
+    }
+
+    /**
      * Log the app open event, if the SDK is initialized
      * Marks the start of the session in the analytics
      *
      */
     internal fun logAppOpen() {
-        initialize()
-
         if (!sdkInitialized) {
             return
         }
@@ -77,11 +73,14 @@ class Logger {
             return
 
         scope.launch {
-            defaultEventTracker.trackScreenOpen(
-                screenName = screenName,
-                sessionId = sessionId!!,
-                timestamp = System.currentTimeMillis()
-            )
+            async {
+                defaultEventTracker.trackScreenOpen(
+                    screenName = screenName,
+                    sessionId = sessionId!!,
+                    timestamp = System.currentTimeMillis()
+                )
+
+            }.await()
 
             DataSyncHelper.fireSyncWorker()
         }
@@ -91,16 +90,18 @@ class Logger {
     /**
      * Publicly exposed function to log events
      */
-    fun logEvent(event: CustomEvent) {
+    fun logEvent(event: LyticsEvent) {
         if (!sdkInitialized || sessionId.isNullOrEmpty())
             return
 
         scope.launch {
-            customEventTracker.trackEvent(
-                event = event,
-                sessionId = sessionId!!,
-                timestamp = System.currentTimeMillis()
-            )
+            async {
+                customEventTracker.trackEvent(
+                    event = event,
+                    sessionId = sessionId!!,
+                    timestamp = System.currentTimeMillis()
+                )
+            }.await()
 
             DataSyncHelper.fireSyncWorker()
         }

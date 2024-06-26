@@ -1,8 +1,8 @@
 package com.droid.lytics.tracker
 
 import com.droid.lytics.MyApplication
-import com.droid.lytics.db.entity.EventEntity
-import com.droid.lytics.db.entity.PropEntity
+import com.droid.lytics.storage.entity.EventEntity
+import com.droid.lytics.storage.entity.PropEntity
 import com.droid.lytics.util.Constants
 
 /**
